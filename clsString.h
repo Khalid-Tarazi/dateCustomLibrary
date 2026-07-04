@@ -387,7 +387,3 @@ public:
         _Value = removenPunctuationFromString(_Value);
     }
 };
-
-class clsString
-{
-};
