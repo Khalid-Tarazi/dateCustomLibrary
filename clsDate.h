@@ -233,12 +233,252 @@ public:
 		return arrDayNames[DayOfWeekOrder];
 	}
 
+	static string dayShortName(short day, short month, short year) {
+		string arrDayNames[] = {
+		"Sun","Mon","Tue","Wed","Thu","Fri","Sat" };
+		return arrDayNames[dayOfWeekOrder(day, month, year)];
+	}
 	
+	string  dayShortName() {
+		string arrDayNames[] = {
+		"Sun","Mon","Tue","Wed","Thu","Fri","Sat" };
+		return arrDayNames[dayOfWeekOrder(day, month, year)];
+	}
+
+	static string monthShortName(short MonthNumber) {
+		string Months[12] = { "Jan", "Feb", "Mar",
+		"Apr", "May", "Jun",
+		"Jul", "Aug", "Sep",
+		"Oct", "Nov", "Dec"
+		};
+		return (Months[MonthNumber - 1]);
+	}
+
+	string monthShortName() {
+		return monthShortName(_Month);
+	}
+
+	static void printMonthCalendar(short Month, short Year) {
+		int NumberOfDays;
+		// Index of the day from 0 to 6
+		int current = dayOfWeekOrder(1, Month, Year);
+		NumberOfDays = numberOfDaysInMonth(Month, Year);
+		// Print the current month name
+		printf("\n _______________%s_______________\n\n",
+			monthShortName(Month).c_str());
+		// Print the columns
+		printf(" Sun Mon Tue Wed Thu Fri Sat\n");
+		// Print appropriate spaces
+		int i;
+		for (i = 0; i < current; i++)
+			printf(" ");
+		for (int j = 1; j <= NumberOfDays; j++)
+		{
+			printf("%5d", j);
+			if (++i == 7)
+			{
+				i = 0;
+				printf("\n");
+			}
+		}
+		printf("\n _________________________________\n");
+	}
+
+	void printMonthCalendar() {
+		printMonthCalendar(_Month, _Year);
+	}
+
+	static void printYearCalendar(int Year) {
+		printf("\n _________________________________\n\n");
+		printf("      Calendar - %d\n", Year);
+		printf(" _________________________________\n");
+		for (int i = 1; i <= 12; i++)
+		{
+			printMonthCalendar(i, Year);
+		}
+		return;
+	}
+
+	void printYearCalendar() {
+		printf("\n  _________________________________\n\n");
+		printf("           Calendar - %d\n", _Year);
+		printf("  _________________________________\n");
+
+
+		for (int i = 1; i <= 12; i++)
+		{
+			printMonthCalendar(i, _Year);
+		}
+
+		return;
+	}
+
+	static int numberOfDaysFromTheBeginingOfTheYear(short day, short month, short year) {
+
+		int totalDays = 0;
+
+		for (int i = 1; i <= month - 1; i++) {
+			totalDays += numberOfDaysInMonth(i, year);
+		}
+
+		totalDays += day;
+
+		return totalDays;
+	}
+
+	int numberOfDaysFromTheBeginingOfTheYear() {
+		short TotalDays = 0;
+
+		for (int i = 1; i <= _Month - 1; i++)
+		{
+			TotalDays += numberOfDaysInMonth(i, _Year);
+		}
+
+		TotalDays += _Day;
+
+		return TotalDays;
+	}
+
+	static clsDate getDateFromDayOrderInYear(short dateOrderInYear, short year) {
+		clsDate date;
+		short remainingDays = dateOrderInYear;
+		short monthDays = 0;
+
+		date.year = year;
+		date.month = 1;
+
+		while (true) {
+			monthDays = numberOfDaysInMonth(date.month, year);
+
+			if (remainingDays > monthDays) {
+				remainingDays -= monthDays;
+				date.month++;
+			}
+			else {
+				date.day = remainingDays;
+				break;
+			}
+		}
+
+		return date;
+	}
+
+	void addDays(short days) {
+		short remainingDays = days + numberOfDaysFromTheBeginingOfTheYear(_Day, _Month, _Year);
+		short monthDays = 0;
+
+		_Month = 1;
+
+		while (true) {
+			monthDays = numberOfDaysInMonth(_Month, _Year);
+
+			if (remainingDays > monthDays) {
+				remainingDays -= monthDays;
+				_Month++;
+
+				if (_Month > 12) {
+					_Month = 1;
+					_Year++;
+				}
+				
+			}
+			else {
+				_Day = remainingDays;
+				break;
+			}
+		}
+	}
+
+	static bool isDate1BeforeDate2(clsDate date1, clsDate date2) {
+		return (date1.year < date2.year) ? true : ((date1.year == date2.year) ? (date1.month < date2.month ? true : (date1.month == date2.month ? date1.day < date2.day : false)) : false);
+	}
+
+	bool isDate1BeforeDate2(clsDate date2) {
+		//Note: this* send the current object.
+		return isDate1BeforeDate2(*this, date2);
+	}
+
+	static bool isDate1EqualsDate2(clsDate date1, clsDate date2) {
+		return (date1.year == date2.year) ? ((date1.month == date2.month) ? ((date1.day == date2.day) ? true : false) : false) : false;
+	}
+
+	bool isDate1EqualsDate2(clsDate date2) {
+		return isDate1EqualsDate2(*this, date2);
+	}
+
+	static bool isLastDayInMonth(clsDate date) {
+
+		return (date.day == numberOfDaysInMonth(date.month, date.year));
+	}
+
+	bool isLastDayInMonth() {
+		return isLastDayInMonth(*this);
+	}
+
+	static bool isLastMonthInYear(short month) {
+
+		return (month == 12);
+	}
+
+	static clsDate addOneDay(clsDate date) {
+
+		if (isLastDayInMonth(date)) {
+			if (isLastMonthInYear(date.month)) {
+				date.month = 1;
+				date.day = 1;
+				date.year++;
+			}
+			else {
+				date.day = 1;
+				date.month++;
+			}
+		}
+		else {
+			date.day++;
+		}
+
+		return date;
+	}
+
+	void addOneDay() {
+		*this = addOneDay(*this);
+	}
+
+	static void swapDates(clsDate& Date1, clsDate& Date2) {
+
+		clsDate TempDate;
+		TempDate = Date1;
+		Date1 = Date2;
+		Date2 = TempDate;
+	}
+
+	static int getDifferenceInDays(clsDate Date1, clsDate Date2, bool IncludeEndDay = false) {
+		//this will take care of negative diff
+		int Days = 0;
+		short SawpFlagValue = 1;
+
+		if (!isDate1BeforeDate2(Date1, Date2)) {
+			//Swap Dates 
+			swapDates(Date1, Date2);
+			SawpFlagValue = -1;
+		}
+
+		while (isDate1BeforeDate2(Date1, Date2)) {
+			Days++;
+			Date1 = addOneDay(Date1);
+		}
+
+		return IncludeEndDay ? ++Days * SawpFlagValue : Days * SawpFlagValue;
+	}
+
+	int getDifferenceInDays(clsDate Date2, bool IncludeEndDay = false)
+	{
+		return getDifferenceInDays(*this, Date2, IncludeEndDay);
+	}
 
 
 
 
-	
 
 
 

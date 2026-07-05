@@ -14,18 +14,18 @@ int main() {
 	date3.print();
 
 	clsDate date4(250, 2026);
-	dete4.print();
+	date4.print();
 	
 	//-----------
 
 	date1.increaseDateByOneMonth();
 	date1.print();
 
-	//date3.printYearCalendar();
-	//cout << date2.isValid() << endl;
+	date3.printYearCalendar();
+	cout << date2.isValid() << endl;
 
-	/*cout << "My age in days: " <<
-		clsDate::calculateMyAgeInDays(clsDate(4, 8, 1989));*/
+	cout << "My age in days: " <<
+		clsDate::calculateMyAgeInDays(clsDate(4, 8, 1989));
 
 	//-----------
 
