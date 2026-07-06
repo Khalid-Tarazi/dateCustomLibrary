@@ -573,21 +573,291 @@ public:
 		return date;
 	}
 
+	void increaseDateByXYears(short years) {
+		increaseDateByXYears(years);
+	}
 
+	clsDate increaseDateByOneDecade(clsDate& date) {
+		date.year += 10;
+		return date;
+	}
 
+	void increaseDateByOneDecade() {
+		increaseDateByOneDecade(*this);
+	}
 
+	clsDate increaseDateByXDecades(short decade, clsDate& date) {
+		date.year *= 10;
+		return date;
+	}
 
+	void increaseDateByXDecades(short decade) {
+		increaseDateByXDecades(decade, *this);
+	}
 
+	clsDate increaseDateByOneCentury(clsDate& date) {
+		date.year += 100;
+		return date;
+	}
 
+	void increaseDateByOneCentury() {
+		increaseDateByOneCentury(*this);
+	}
 
+	clsDate increaseDateByOneMillennium(clsDate& date) {
+		date.year += 1000;
+		return date;
+	}
 
+	void increaseDateByOneMillennium() {
+		increaseDateByOneMillennium(*this);
+	}
 
+	static clsDate decreaseDateByOneDay(clsDate date) {
+		if (date.day == 1) {
+			if (date.month == 1) {
+				date.month = 12;
+				date.day = 31;
+				date.year--;
+			}
+			else {
+				date.month--;
+				date.day = numberOfDaysInMonth(date.month, date.year);
+			}
+		}
+		else {
+			date.day--;
+		}
 
+		return date;
+	}
 
+	void decreaseDateByOneDay() {
+		decreaseDateByOneDay(*this);
+	}
 
+	static clsDate decreaseDateByOneWeek(clsDate& Date) {
 
+		for (int i = 1; i <= 7; i++) {
+			Date = decreaseDateByOneDay(Date);
+		}
 
+		return Date;
+	}
 
+	void decreaseDateByOneWeek() {
+		decreaseDateByOneWeek(*this);
+	}
+
+	static clsDate decreaseDateByXWeeks(short week, clsDate& date) {
+		for (short i = 1; i <= week; i++) {
+			date = decreaseDateByOneWeek(date);
+		}
+		return date;
+	}
+
+	void decreaseDateByXWeeks(short week) {
+		decreaseDateByXWeeks(week, *this);
+	}
+
+	static clsDate decreaseDateByOneMonth(clsDate& date) {
+		if (date.month == 1) {
+			date.month = 12;
+			date.year--;
+		}
+		else {
+			date.month--;
+		}
+
+		// last check day in date should not exceed max days in the current month
+		// example if date is 31/3/2022 decreasing one month should not be 31 / 2 / 2022, it should
+		// be 28/2/2022
+
+		short numberOfDaysInCurrentMonth = numberOfDaysInMonth(date.month, date.year);
+		if (date.day > numberOfDaysInCurrentMonth) {
+			date.day = numberOfDaysInCurrentMonth;
+		}
+
+		return date;
+	}
+
+	void decreaseDateByOneMonth() {
+		decreaseDateByOneMonth(*this);
+	}
+
+	static clsDate decreaseDateByXDays(short day, clsDate& date) {
+		for (short i = 1; i <= day; i++) {
+			date = decreaseDateByOneDay(date);
+		}
+		return date;
+	}
+
+	void decreaseDateByXDays(short day) {
+		decreaseDateByXDays(day, *this);
+	}
+
+	static clsDate decreaseDateByXMonth(short month, clsDate& date) {
+		for (int i = 1; i <= month; i++) {
+			date = decreaseDateByOneMonth(date);
+		}
+
+		return date;
+	}
+
+	void decreaseDateByXMonth(short month) {
+		decreaseDateByXMonth(month, *this);
+	}
+
+	static clsDate decreaseDateByOneYear(clsDate& date) {
+		date.year--;
+		return date;
+	}
+
+	void decreaseDateByOneYear() {
+		decreaseDateByOneYear(*this);
+	}
+
+	static clsDate decreaseDateByXYearsFaster(short year, clsDate& date) {
+		date.year -= year;
+		return date;
+	}
+
+	void decreaseDateByXYearsFaster(short year) {
+		decreaseDateByXYearsFaster(year, *this);
+	}
+
+	static clsDate decreaseDateByOneDecade(clsDate& date) {
+		date.year -= 10;
+		return date;
+	}
+
+	void decreaseDateByOneDecade() {
+		decreaseDateByOneDecade(*this);
+	}
+
+	static clsDate decreaseDateByXDecadesFaster(short decade, clsDate& date) {
+		date.year -= decade * 10;
+		return date;
+	}
+
+	void decreaseDateByXDecadesFaster(short decade) {
+		decreaseDateByXDecadesFaster(decade, *this);
+	}
+
+	static clsDate decreaseDateByOneCentury(clsDate& date) {
+		date.year -= 100;
+		return date;
+	}
+
+	void decreaseDateByOneCentury() {
+		decreaseDateByOneCentury(*this);
+	}
+
+	static clsDate decreaseDateByOneMillinum(clsDate& date) {
+		date.year -= 1000;
+		return date;
+	}
+
+	void decreaseDateByOneMillinum() {
+		decreaseDateByOneMillinum(*this);
+	}
+
+	static short isEndOfWeek(clsDate date) {
+		return dayOfWeekOrder(date.day, date.month, date.year) == 6;
+	}
+
+	short isEndOfWeek() {
+		return isEndOfWeek(*this);
+	}
+
+	static bool isWeekEnd(clsDate date) {
+		//Weekends are Fri and Sat
+		short dayIndex = dayOfWeekOrder(date.day, date.month, date.year);
+		return (dayIndex == 5 || dayIndex == 6);
+	}
+
+	bool isWeekEnd() {
+		return isWeekEnd(*this);
+	}
+
+	static bool isBusinessDay(clsDate date) {
+		//Weekends are Sun,Mon,Tue,Wed and Thur
+
+	   /*
+		short DayIndex = DayOfWeekOrder(Date.Day, Date.Month, Date.Year);
+		return  (DayIndex >= 5 && DayIndex <= 4);
+	   */
+
+	   //shorter method is to invert the IsWeekEnd: this will save updating code.
+		return !isWeekEnd(date);
+	}
+
+	bool isBusinessDay() {
+		return isBusinessDay(*this);
+	}
+
+	static short daysUntilTheEndOfWeek(clsDate date) {
+		return 6 - dayOfWeekOrder(date.day, date.month, date.year); //6 is index from 0 to 6.
+	}
+
+	short daysUntilTheEndOfWeek() {
+		return daysUntilTheEndOfWeek();
+	}
+
+	static short daysUntilTheEndOfMonth(clsDate date) {
+		clsDate endOfMonthDate;
+		endOfMonthDate.day = numberOfDaysInMonth(date.month, date.year);
+		endOfMonthDate.month = date.month;
+		endOfMonthDate.year = date.year;
+
+		return getDifferenceInDays(date, endOfMonthDate, true);
+	}
+
+	short daysUntilTheEndOfMonth() {
+		 return daysUntilTheEndOfMonth(*this);
+	}
+
+	static short daysUntilTheEndOfYear(clsDate date) {
+		clsDate endOfYearDate;
+		endOfYearDate.day = 31;
+		endOfYearDate.month = 12;
+		endOfYearDate.year = date.year;
+
+		return getDifferenceInDays(date, endOfYearDate, true);
+	}
+
+	short daysUntilTheEndOfYear() {
+		return daysUntilTheEndOfYear(*this);
+	}
+
+	//i added this method to calculate business days between 2 days
+	static short CalculateBusinessDays(clsDate DateFrom, clsDate DateTo) {
+
+		short Days = 0;
+		while (isDate1BeforeDate2(DateFrom, DateTo)) {
+			if (isBusinessDay(DateFrom))
+				Days++;
+
+			DateFrom = addOneDay(DateFrom);
+		}
+
+		return Days;
+	}
+
+	static short calculateVacationDays(clsDate dateFrom, clsDate dateTo) {
+		short daysCount = 0;
+		while (isDate1BeforeDate2(dateFrom, dateTo)) {
+			if (isBusinessDay(dateFrom)) {
+				daysCount++;
+			}
+
+			dateFrom = addOneDay(dateFrom);
+		}
+
+		return daysCount;
+	}
+
+	//above method is eough , no need to have method for the object
 
 
 
