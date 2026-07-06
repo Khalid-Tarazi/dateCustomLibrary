@@ -476,8 +476,102 @@ public:
 		return getDifferenceInDays(*this, Date2, IncludeEndDay);
 	}
 
+	static short calculateMyAgeInDays(clsDate dateOfBirth) {
+		return getDifferenceInDays(dateOfBirth, clsDate::getSystemDate(), true);
+	}
+	//above no need to have nonstatic function for the object because it does not depend on any data from it.
 
+	static clsDate increaseDateByOneWeek(clsDate& date) {
 
+		for (short i = 1; i <= 7; i++) {
+			date = addOneDay(date);
+		}
+
+		return date;
+	}
+
+	void increaseDateByOneWeek() {
+		increaseDateByOneWeek(*this);
+	}
+
+	clsDate increaseDateByXWeeks(short weeks, clsDate& date) {
+
+		for (short i = 1; i <= weeks; i++) {
+			date = increaseDateByOneWeek(date);
+		}
+
+		return date;
+	}
+
+	void increaseDateByXWeeks(short weeks) {
+		increaseDateByXWeeks(weeks, *this);
+	}
+
+	clsDate increaseDateByOneMonth(clsDate& date) {
+
+		if (date.month == 12) {
+			date.month = 1;
+			date.year++;
+		}
+		else {
+			date.month++;
+		}
+
+		//last check day in date should not exceed max days in the current month
+		// example if date is 31/1/2022 increasing one month should not be 31 / 2 / 2022, it should
+		// be 28/2/2022
+		short numberOfDaysInCurrentMonth = numberOfDaysInMonth(date.month, date.year);
+
+		if (date.day > numberOfDaysInCurrentMonth) {
+			date.day = numberOfDaysInCurrentMonth;
+		}
+
+		return date;
+	}
+
+	void increaseDateByOneMonth() {
+		increaseDateByOneMonth(*this);
+	}
+
+	clsDate increaseDateByXDays(short days, clsDate& date) {
+
+		for (short i = 1; i <= days; i++) {
+			date = addOneDay(date);
+		}
+
+		return date;
+	}
+
+	void increaseDateByXDays(short days) {
+		increaseDateByXDays(days, *this);
+	}
+
+	clsDate increaseDateByXMonth(short months, clsDate& date) {
+
+		for (short i = 1; i <= months; i++) {
+			date = increaseDateByOneMonth(date);
+		}
+
+		return date;
+	}
+
+	void increaseDateByXMonth(short months) {
+		increaseDateByXMonth(months, *this);
+	}
+
+	static clsDate increaseDatebyOneYear(clsDate& date) {
+		date.year++;
+		return date;
+	}
+	
+	void increaseDatebyOneYear() {
+		increaseDatebyOneYear(*this);
+	}
+
+	clsDate increaseDateByXYears(short years, clsDate& date) {
+		date.year += years;
+		return date;
+	}
 
 
 
