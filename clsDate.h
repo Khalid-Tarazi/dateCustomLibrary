@@ -859,9 +859,54 @@ public:
 
 	//above method is eough , no need to have method for the object
 
+	static clsDate calculateVacationReturnDate(clsDate dateFrom, short vacationDays) {
+		short weekEndCounter = 0;
+		//in case the data is weekend keep adding one day until you reach business day
+		//we get rid of all weekends before the first business day
+		while (isWeekEnd(dateFrom)) {
+			dateFrom = addOneDay(dateFrom);
+		}
 
+		//here we increase the vacation dates to add all weekends to it.
+		for (short i = 1; i <= vacationDays + weekEndCounter; i++) {
+			if (isWeekEnd(dateFrom)) weekEndCounter++;
 
+			dateFrom = addOneDay(dateFrom);
+		}
 
+		//in Case the return date is weekend keep adding one day until you reach business day
+		while (isWeekEnd(dateFrom)) {
+			dateFrom = addOneDay(dateFrom);
+		}
+		return dateFrom;
+	}
 
+	static bool isDate1AfterDate2(clsDate date1, clsDate date2) {
+		return (!isDate1BeforeDate2(date1, date2)) && !isDate1EqualsDate2(date1, date2);
+	}
 
+	bool isDate1AfterDate2(clsDate date2) {
+		return isDate1AfterDate2(*this, date2);
+	}
+
+	enum enDateCompare { Before = -1, Equal = 0, After = 1 };
+
+	static enDateCompare CompareDates(clsDate Date1, clsDate Date2) {
+		if (isDate1BeforeDate2(Date1, Date2))
+			return enDateCompare::Before;
+
+		if (isDate1EqualsDate2(Date1, Date2))
+			return enDateCompare::Equal;
+
+		/* if (IsDate1AfterDate2(Date1,Date2))
+			 return enDateCompare::After;*/
+
+			 //this is faster
+		return enDateCompare::After;
+
+	}
+
+	enDateCompare CompareDates(clsDate Date2) {
+		return CompareDates(*this, Date2);
+	}
 };
